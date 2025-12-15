@@ -1,23 +1,67 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import authServer from './api/authServer';
+import userServer from './api/userServer';
+import useToast from './utils/useToast';
+import { useDispatch } from 'react-redux';
+import { addUser } from './store/userSlice';
 
-function Register() {
+function Register({ isEdit = false, defaultValues = null }) {
+  const navigate = useNavigate();
+  const showToast = useToast();
+  const dispatch =useDispatch()
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues,
+  });
 
   const onSubmit = (data) => {
-    console.log('Form Data:', data);
+    if (isEdit) {
+      const userInfo = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        gender: data.gender,
+        age: data.age,
+      };
+      userServer
+        .update(data._id, userInfo)
+        .then(() => {
+          dispatch(addUser(data))
+          navigate('/user/request');
+          showToast('Updated Successfully...!!', 'success');
+        })
+        .catch((err) => {
+          console.error('ERROR:', err);
+        });
+    } else {
+      authServer
+        .signup(data)
+        .then(() => {
+          showToast('Sign-up Successfully...!!', 'success');
+          navigate('/user/request');
+        })
+        .catch((err) => {
+          console.error('ERROR:', err);
+        });
+    }
   };
 
   return (
-    <div className='hero max-h-full'>
-      <div className='hero-content flex-col lg:flex-row-reverse'>
-        <div className='card bg-base-200 w-400 m-1 max-w-200 shrink-0 shadow-2xl'>
-          <h1 className='text-3xl font-bold text-center mt-1'>Register now!</h1>
+    <div className='hero h-2/12 mb-40'>
+      <div className='hero-content flex-col lg:flex-row-reverse mt-20 '>
+        <div
+          className={`card bg-base-200 ${
+            isEdit ? 'w-300 max-w-150 mt-15' : 'w-400 max-w-200'
+          } m-1  shrink-0 shadow-2xl shadow-blue-400 rounded-2xl`}>
+          <h1 className='text-3xl font-bold text-center mt-1'>
+            {isEdit ? 'Update' : 'Register'} now!
+          </h1>
           <div className='card-body'>
             <form
               className='fieldset space-y-3'
@@ -137,40 +181,47 @@ function Register() {
                 )}
               </div>
 
-              <div>
-                <label className='label'>Password</label>
-                <input
-                  type='password'
-                  placeholder='Enter password'
-                  className={`input input-bordered w-full ${
-                    errors.password ? 'input-error' : ''
-                  }`}
-                  {...register('password', {
-                    required: 'Password is required',
-                    minLength: {
-                      value: 8,
-                      message: 'Minimum 8 characters',
-                    },
-                    pattern: {
-                      value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
-                      message: 'Must include upper, lower & number',
-                    },
-                  })}
-                />
-                {errors.password && (
-                  <p className='text-error text-sm'>
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+              {!isEdit ? (
+                <>
+                  <div>
+                    <label className='label'>Password</label>
+                    <input
+                      type='password'
+                      placeholder='Enter password'
+                      className={`input input-bordered w-full ${
+                        errors.password ? 'input-error' : ''
+                      }`}
+                      {...register('password', {
+                        required: 'Password is required',
+                        minLength: {
+                          value: 8,
+                          message: 'Minimum 8 characters',
+                        },
+                        pattern: {
+                          value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
+                          message: 'Must include upper, lower & number',
+                        },
+                      })}
+                    />
+                    {errors.password && (
+                      <p className='text-error text-sm'>
+                        {errors.password.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className='flex justify-center-safe items-center'>
+                    <button className='btn link link-hover'>
+                      <Link className='font-bold' to='/auth/login'>
+                        Login now
+                      </Link>
+                    </button>
+                  </div>
+                </>
+              ) : null}
 
-              <div className='flex justify-center'>
-                <Link className='font-bold' to='/auth/login'>
-                  Login now
-                </Link>
-              </div>
-
-              <button className='btn btn-primary mt-4 w-full'>Register</button>
+              <button className='btn btn-primary mt-4 w-full'>
+                {isEdit ? 'Update' : 'Register'}
+              </button>
             </form>
           </div>
         </div>
