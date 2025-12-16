@@ -1,14 +1,16 @@
 import React from 'react';
 import authServer from './api/authServer';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeUser } from './store/userSlice';
 import useToast from './utils/useToast';
 
+
 function Navbar() {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const showToast = useToast()
+  const showToast = useToast();
   const user = useSelector((state) => state?.user);
 
   const handleLogout = () => {
@@ -22,20 +24,49 @@ function Navbar() {
   return (
     <div className='navbar bg-base-200 shadow-sm  text-neutral-content  p-4 fixed z-10'>
       <div className='flex-1'>
-        <a className='btn btn-ghost text-xl'>DevTinder</a>
+        <Link className='btn btn-ghost text-xl' to='/user/feed'>
+          DevTinder
+        </Link>
       </div>
       <div className='flex gap-2'>
         {user?._id ? (
           <>
-            <div className='pt-2 bg-blue-600 pl-5 pr-5 rounded-box'>
-              <Link to='/user/request' className='justify-between '>
-                Request
+            <div
+              className={`pt-2 pl-5 pr-5 rounded-box ${
+                location.pathname === '/user/feed' ? 'bg-blue-500' : ''
+              }`}>
+              <Link to='/user/feed' className='justify-between '>
+                Feed
               </Link>
             </div>
-            <div className='pt-2 bg-blue-600 pl-5 pr-5 rounded-box'>
+            <div
+              className={`pt-2 pl-5 pr-5 rounded-box ${
+                location.pathname === '/user/connection' ? 'bg-blue-500' : ''
+              }`}>
+              <Link to='/user/connection' className='justify-between '>
+                Connections
+              </Link>
+            </div>
+            <div
+              className={`pt-2 pl-5 pr-5 rounded-box ${
+                location.pathname === '/user/connection-request'
+                  ? 'bg-blue-500'
+                  : ''
+              }`}>
+              <Link to='/user/connection-request' className='justify-between '>
+                Requests
+              </Link>
+            </div>
+            <div
+              className={`pt-2 pl-5 pr-5 rounded-box ${
+                location.pathname === '/user/profile' ? 'bg-blue-500' : ''
+              }`}>
               <Link to='/user/profile' className='justify-between'>
                 Profile
               </Link>
+            </div>
+            <div className='pt-2'>
+              Welcome, {user?.firstName?.toUpperCase()}
             </div>
             <div className='dropdown dropdown-end mx-5'>
               <div
@@ -56,9 +87,6 @@ function Navbar() {
                   <Link to='/user/profile' className='justify-between '>
                     {user?.firstName} {user?.lastName}
                   </Link>
-                </li>
-                <li>
-                  <a>Settings</a>
                 </li>
                 <li>
                   <button className='button-link' onClick={handleLogout}>

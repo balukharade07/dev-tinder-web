@@ -1,22 +1,56 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000',
-  timeout: 10000,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+class ApiService {
+  constructor() {
+    this.api = axios.create({
+      baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000',
+      timeout: 10000,
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-api.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    if (error.response?.status === 401) {
-      window.location.href = '/auth/login';
-    }
-    return Promise.reject(error.response?.data || error.message);
-  },
-);
+    this._initializeResponseInterceptor();
+  }
 
-export default api;
+  _initializeResponseInterceptor() {
+    this.api.interceptors.response.use(
+      (response) => response.data,
+      (error) => {
+        if (error.response?.status === 401) {
+          window.location.href = '/auth/login';
+        }
+
+        return Promise.reject(
+          error.response?.data || error.message
+        );
+      }
+    );
+  }
+
+  // ---------- HTTP Methods ----------
+  get(url, config = {}) {
+    return this.api.get(url, config);
+  }
+
+  post(url, data = {}, config = {}) {
+    return this.api.post(url, data, config);
+  }
+
+  put(url, data = {}, config = {}) {
+    return this.api.put(url, data, config);
+  }
+
+  patch(url, data = {}, config = {}) {
+    return this.api.patch(url, data, config);
+  }
+
+  delete(url, config = {}) {
+    return this.api.delete(url, config);
+  }
+}
+
+// Export single instance (Singleton)
+export default new ApiService();
+

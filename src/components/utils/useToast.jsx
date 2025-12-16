@@ -4,7 +4,7 @@ import { removeToast, setToast } from '../store/utilSlice';
 export default function useToast() {
   const dispatch = useDispatch();
 
-  const showToast = (message, type = 'success', duration = 5000) => {
+  const showToast = (message, type = 'success', duration = 3000) => {
     dispatch(setToast({ show: true, message, type }));
 
     setTimeout(() => {

@@ -25,9 +25,11 @@ function Login() {
       .then((user) => {
         dispatch(addUser(user));
         showToast('Login Successfully...!!', 'success');
-        navigate('/user/request');
+        navigate('/user/feed');
       })
       .catch((err) => {
+        const text = err ?? 'Invalid Credintionl'
+        showToast(text, 'error');
         console.error('ERROR:', err);
       });
   };
@@ -75,14 +77,14 @@ function Login() {
                   placeholder='Password'
                   {...register('password', {
                     required: 'Password is required',
-                    minLength: {
-                      value: 8,
-                      message: 'Minimum 8 characters',
-                    },
-                    pattern: {
-                      value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
-                      message: 'Must include upper, lower & number',
-                    },
+                    // minLength: {
+                    //   value: 8,
+                    //   message: 'Minimum 8 characters',
+                    // },
+                    // pattern: {
+                    //   value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
+                    //   message: 'Must include upper, lower & number',
+                    // },
                   })}
                 />
                 {errors.password && (
@@ -94,6 +96,7 @@ function Login() {
               <div className='flex justify-between items-center'>
                 <button
                   className='btn link link-hover'
+                  type='button'
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -108,7 +111,7 @@ function Login() {
                 </button>
               </div>
 
-              <button className='btn btn-primary mt-4 w-110'>Login</button>
+              <button type='submit' className='btn btn-primary mt-4 w-110'>Login</button>
             </form>
           </div>
         </div>

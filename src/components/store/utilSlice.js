@@ -8,6 +8,7 @@ const utilSlice = createSlice({
       type: '',
       show: false,
     },
+    activeMenu: '',
   },
   reducers: {
     setToast: (state, action) => {
@@ -20,9 +21,12 @@ const utilSlice = createSlice({
         show: false,
       };
     },
+    setActiveMenu: (state, action) => {
+      state.activeMenu = action.payload;
+    },
   },
 });
 
-export const { removeToast, setToast } = utilSlice.actions;
+export const { removeToast, setToast, setActiveMenu } = utilSlice.actions;
 
 export default utilSlice.reducer;

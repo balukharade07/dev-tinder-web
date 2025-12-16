@@ -33,7 +33,7 @@ function Register({ isEdit = false, defaultValues = null }) {
         .update(data._id, userInfo)
         .then(() => {
           dispatch(addUser(data))
-          navigate('/user/request');
+          navigate('/user/feed');
           showToast('Updated Successfully...!!', 'success');
         })
         .catch((err) => {
@@ -42,9 +42,10 @@ function Register({ isEdit = false, defaultValues = null }) {
     } else {
       authServer
         .signup(data)
-        .then(() => {
+        .then((result) => {
+          dispatch(addUser(result));
           showToast('Sign-up Successfully...!!', 'success');
-          navigate('/user/request');
+          navigate('/user/feed');
         })
         .catch((err) => {
           console.error('ERROR:', err);
@@ -60,7 +61,7 @@ function Register({ isEdit = false, defaultValues = null }) {
             isEdit ? 'w-300 max-w-150 mt-15' : 'w-400 max-w-200'
           } m-1  shrink-0 shadow-2xl shadow-blue-400 rounded-2xl`}>
           <h1 className='text-3xl font-bold text-center mt-1'>
-            {isEdit ? 'Update' : 'Register'} now!
+            {isEdit ? 'Profile' : 'Register now!'}
           </h1>
           <div className='card-body'>
             <form
@@ -220,7 +221,7 @@ function Register({ isEdit = false, defaultValues = null }) {
               ) : null}
 
               <button className='btn btn-primary mt-4 w-full'>
-                {isEdit ? 'Update' : 'Register'}
+                {isEdit ? 'Update Profile' : 'Register'}
               </button>
             </form>
           </div>

@@ -15,15 +15,15 @@ function Body() {
 
   useEffect(() => {
     if (user?._id && location.pathname.includes('auth/')) {
-      navigate('/user/request', { replace: true });
+      navigate('/user/feed', { replace: true });
     } else {
       authServer
         .getLoggedInUser()
         .then((res) => {
           dispatch(addUser(res));
-          if (res._id && location.pathname.includes('auth/')) {
+          if (res._id && (location.pathname.includes('auth/') || location.pathname === '/')) {
             dispatch(addUser(res));
-            navigate('/user/request', { replace: true });
+            navigate('/user/feed', { replace: true });
           }
         })
         .catch((err) => {

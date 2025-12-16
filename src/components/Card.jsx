@@ -1,6 +1,15 @@
 import { MessageCircleHeart, MessageCircleX } from 'lucide-react';
 
-function Card({ fullName, age, email, gender, isEdit = false }) {
+function Card({
+  _id,
+  fullName,
+  age,
+  email,
+  gender,
+  handleConnection,
+  isEdit = false,
+  screen = '',
+}) {
   return (
     <div className='flex justify-center items-center min-h-screen  shrink-0'>
       <div className='card w-80  shadow-xl border border-white/10 rounded-2xl  shadow-blue-400'>
@@ -24,13 +33,28 @@ function Card({ fullName, age, email, gender, isEdit = false }) {
         </div>
         {!isEdit ? (
           <div className='grid grid-cols-2 border-t border-white/10 rounded-2xl'>
-            <button className='btn btn-ghost rounded-t-none rounded-2xl rounded-r-none text-white gap-2 bg-red-400 '>
+            <button
+              onClick={() =>
+                handleConnection(
+                  _id,
+                  screen === 'connectionRequest' ? 'rejected' : 'ignored',
+                )
+              }
+              className='btn btn-ghost rounded-t-none rounded-2xl rounded-r-none text-white gap-2 bg-red-400 '>
               <MessageCircleX size={16} />
-              Ignored
+              {screen === 'connectionRequest' ? 'Rejected' : 'Ignored'}
             </button>
-            <button className='btn btn-ghost rounded-t-none rounded-2xl rounded-l-none  text-white gap-2 border-l border-white/10 bg-green-400'>
+            <button
+              onClick={() =>
+                handleConnection(
+                  _id,
+                  screen === 'connectionRequest' ? 'accepeted' : 'interested',
+                )
+              }
+              className='btn btn-ghost rounded-t-none rounded-2xl rounded-l-none  text-white gap-2 border-l border-white/10 bg-green-400'>
               <MessageCircleHeart size={16} />
-              Interested
+
+              {screen === 'connectionRequest' ? 'Accepeted' : 'Interested'}
             </button>
           </div>
         ) : null}
