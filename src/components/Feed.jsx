@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import userServer from './api/userServer';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFeed } from './store/feedSlice';
+import { addFeed } from './store/slice/feedSlice';
 import Card from './Card';
 import useToast from './utils/useToast';
 

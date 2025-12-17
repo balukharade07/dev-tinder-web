@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import userServer from './api/userServer';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from './Card';
-import { removeRequest, setRequests } from './store/connectionSlice';
+import { removeRequest, setRequests } from './store/slice/connectionSlice';
 import NoDataCard from './NoDataCard';
 
 function ConnectionRequest() {

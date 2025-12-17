@@ -1,11 +1,10 @@
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import authServer from './api/authServer';
-import { addUser } from './store/userSlice';
 import { useDispatch } from 'react-redux';
 import ForgotPassword from './ForgotPassword';
 import useToast from './utils/useToast';
+import { loginUser } from './store/Thunk/userThunk';
 
 function Login() {
   const dispatch = useDispatch();
@@ -19,19 +18,14 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    authServer
-      .login(data)
-      .then((user) => {
-        dispatch(addUser(user));
-        showToast('Login Successfully...!!', 'success');
-        navigate('/user/feed');
-      })
-      .catch((err) => {
-        const text = err ?? 'Invalid Credintionl'
-        showToast(text, 'error');
-        console.error('ERROR:', err);
-      });
+  const onSubmit = async (data) => {
+    try {
+      await dispatch(loginUser(data)).unwrap();
+      showToast('Login Successfully...!!', 'success');
+      navigate('/user/feed');
+    } catch (err) {
+      showToast(err, 'error');
+    }
   };
 
   const handleOpen = () => {
@@ -77,14 +71,6 @@ function Login() {
                   placeholder='Password'
                   {...register('password', {
                     required: 'Password is required',
-                    // minLength: {
-                    //   value: 8,
-                    //   message: 'Minimum 8 characters',
-                    // },
-                    // pattern: {
-                    //   value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
-                    //   message: 'Must include upper, lower & number',
-                    // },
                   })}
                 />
                 {errors.password && (
@@ -111,7 +97,9 @@ function Login() {
                 </button>
               </div>
 
-              <button type='submit' className='btn btn-primary mt-4 w-110'>Login</button>
+              <button type='submit' className='btn btn-primary mt-4 w-110'>
+                Login
+              </button>
             </form>
           </div>
         </div>

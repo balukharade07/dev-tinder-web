@@ -1,16 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import authServer from './api/authServer';
-import userServer from './api/userServer';
 import useToast from './utils/useToast';
 import { useDispatch } from 'react-redux';
-import { addUser } from './store/userSlice';
+import { signUpUser, updateUser } from './store/Thunk/userThunk';
 
 function Register({ isEdit = false, defaultValues = null }) {
   const navigate = useNavigate();
   const showToast = useToast();
-  const dispatch =useDispatch()
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -20,36 +18,23 @@ function Register({ isEdit = false, defaultValues = null }) {
     defaultValues,
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (isEdit) {
-      const userInfo = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        gender: data.gender,
-        age: data.age,
-      };
-      userServer
-        .update(data._id, userInfo)
-        .then(() => {
-          dispatch(addUser(data))
-          navigate('/user/feed');
-          showToast('Updated Successfully...!!', 'success');
-        })
-        .catch((err) => {
-          console.error('ERROR:', err);
-        });
+      try {
+        await dispatch(updateUser(data)).unwrap();
+        navigate('/user/feed');
+        showToast('Updated Successfully...!!', 'success');
+      } catch (err) {
+        showToast(err, 'error');
+      }
     } else {
-      authServer
-        .signup(data)
-        .then((result) => {
-          dispatch(addUser(result));
-          showToast('Sign-up Successfully...!!', 'success');
-          navigate('/user/feed');
-        })
-        .catch((err) => {
-          console.error('ERROR:', err);
-        });
+      try {
+        await dispatch(signUpUser(data)).unwrap();
+        showToast('Sign-up Successfully...!!', 'success');
+        navigate('/user/feed');
+      } catch (err) {
+        showToast(err, 'error');
+      }
     }
   };
 

@@ -4,13 +4,13 @@ import Footer from './Footer';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import authServer from './api/authServer';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUser } from './store/userSlice';
+import { addUser } from './store/slice/userSlice';
 import Toast from './utils/Toast';
 
 function Body() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
   const location = useLocation();
 
   useEffect(() => {

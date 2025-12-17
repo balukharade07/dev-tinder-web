@@ -4,7 +4,7 @@ import Card from './Card';
 import { useSelector } from 'react-redux';
 
 function Profile() {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
   if(!user?._id) return null
 
   return (

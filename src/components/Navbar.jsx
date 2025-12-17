@@ -1,24 +1,27 @@
 import React from 'react';
-import authServer from './api/authServer';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeUser } from './store/userSlice';
 import useToast from './utils/useToast';
-
+import { logoutUser } from './store/Thunk/userThunk';
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const showToast = useToast();
-  const user = useSelector((state) => state?.user);
+  const user = useSelector((state) => state?.user.user);
 
-  const handleLogout = () => {
-    authServer.logout().then(() => {
-      dispatch(removeUser());
-      navigate('/auth/login');
+  const handleLogout = async () => {
+    const result = await dispatch(logoutUser());
+    if (logoutUser.fulfilled.match(result)) {
       showToast('Logout Successfully...!!', 'success');
-    });
+      navigate('/auth/login');
+    }
+
+    if (logoutUser.rejected.match(result)) {
+      showToast(result.payload, 'error');
+      console.error('ERROR:', result.payload);
+    }
   };
 
   return (

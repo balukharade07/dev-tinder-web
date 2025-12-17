@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import userServer from './api/userServer';
-import { setConnections } from './store/connectionSlice';
+import { setConnections } from './store/slice/connectionSlice';
 import Card from './Card';
 import NoDataCard from './NoDataCard';
 
