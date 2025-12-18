@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import './App.css';
 import Login from './components/Login';
@@ -21,6 +21,7 @@ function App() {
             <Route path='auth' element={<AuthLayout />}>
               <Route path='login' element={<Login />} />
               <Route path='register' element={<Register />} />
+              <Route path='*' element={<Login />} />
             </Route>
             <Route path='user' element={<UserComponents />}>
               <Route path='feed' element={<Feed />} />
@@ -30,8 +31,10 @@ function App() {
                 element={<ConnectionRequest />}
               />
               <Route path='profile' element={<Profile />} />
+              <Route path='*' element={<Feed />} />
             </Route>
           </Route>
+           <Route path="*" element={<Navigate to="/auth/login" />} />
         </Routes>
       </BrowserRouter>
     </Provider>
