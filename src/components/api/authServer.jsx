@@ -1,30 +1,29 @@
-import api from './api';
+import authApi from './authApi';
 
 class AuthServer {
   login(payload) {
-    return api.post('/login', payload);
+    return authApi.post('/login', payload);
   }
 
   signup(payload) {
-    return api.post('/signup', payload);
+    return authApi.post('/signup', payload);
   }
 
   logout() {
-    return api.post('/logout');
+    return authApi.post('/logout');
   }
 
   getLoggedInUser() {
-    return api.get('/isLoggendIn');
+    return authApi.get('/isLoggendIn');
   }
 
   forgotPassword(email) {
-    return api.post(`/forgotPassword/${email}`);
+    return authApi.post(`/forgotPassword/${email}`);
   }
 
   resetPassword(id, payload) {
-    return api.patch(`/resetPassword/${id}`, payload);
+    return authApi.patch(`/resetPassword/${id}`, payload);
   }
 }
 
-const authServer = new AuthServer();
-export default authServer;
+export default new AuthServer();

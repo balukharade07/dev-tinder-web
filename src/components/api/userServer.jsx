@@ -1,28 +1,28 @@
-import api from './api';
+import userApi from './userApi';
 
 class UserServer {
   getFeeds(page, limit) {
-    return api.post(`/feed?page=${page}&limit=${limit}`);
+    return userApi.post(`/feed?page=${page}&limit=${limit}`);
   }
 
   update(id, payload) {
-    return api.patch(`/user/${id}`, payload);
+    return userApi.patch(`/user/${id}`, payload);
   }
 
   connection(id, status) {
-    return api.post(`/request/send/${status}/${id}`);
+    return userApi.post(`/request/send/${status}/${id}`);
   }
 
   requestReceived() {
-    return api.post('/user/requests/received');
+    return userApi.post('/user/requests/received');
   }
 
   requestReview(requestId, status) {
-    return api.post(`/request/review/${status}/${requestId}`);
+    return userApi.post(`/request/review/${status}/${requestId}`);
   }
 
   getConnection() {
-    return api.post('/user/connections');
+    return userApi.post('/user/connections');
   }
 }
 

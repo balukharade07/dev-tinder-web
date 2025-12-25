@@ -16,8 +16,12 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    addUser: (state, action) => (state.user = action.payload),
-    removeUser: (state) => (state.user = null),
+    addUser: (state, action) => {
+      state.user = action.payload;
+    },
+    removeUser: (state) => {
+      state.user = null;
+    },
   },
   extraReducers: (builder) => {
     handleAsyncCases(builder, loginUser);

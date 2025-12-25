@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 class ApiService {
-  constructor() {
+  constructor(baseURL) {
     this.api = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000',
+      baseURL: baseURL || 'http://localhost:5000',
       timeout: 10000,
       withCredentials: true,
       headers: {
@@ -22,10 +22,8 @@ class ApiService {
           window.location.href = '/auth/login';
         }
 
-        return Promise.reject(
-          error.response?.data || error.message
-        );
-      }
+        return Promise.reject(error.response?.data || error.message);
+      },
     );
   }
 
@@ -52,5 +50,4 @@ class ApiService {
 }
 
 // Export single instance (Singleton)
-export default new ApiService();
-
+export default ApiService;
