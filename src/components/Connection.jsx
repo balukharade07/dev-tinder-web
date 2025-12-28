@@ -29,6 +29,7 @@ function Connection() {
             isEdit={true}
             {...item}
             fullName={`${item?.firstName} ${item?.lastName }`}
+            chat={true}
           />
         );
       })}

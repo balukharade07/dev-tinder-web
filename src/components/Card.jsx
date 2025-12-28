@@ -1,4 +1,6 @@
-import { MessageCircleHeart, MessageCircleX } from 'lucide-react';
+import { MessageCircle, MessageCircleHeart, MessageCircleX } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Avatar } from './chatApp/Avatar';
 
 function Card({
   _id,
@@ -9,17 +11,17 @@ function Card({
   handleConnection,
   isEdit = false,
   screen = '',
+  chat = false,
 }) {
   return (
-    <div className='flex justify-center items-center min-h-screen  shrink-0'>
+    <div
+      className='flex justify-center items-center min-h-screen  shrink-0'
+      key={_id}>
       <div className='card w-80  shadow-xl border border-white/10 rounded-2xl  shadow-blue-400'>
         <div className='card-body items-center text-center space-y-3'>
           <div className='avatar mt-10'>
-            <div className='w-24 rounded-full ring ring-white/10 ring-offset-base-100 ring-offset-2'>
-              <img
-                src='https://randomuser.me/api/portraits/women/44.jpg'
-                alt={fullName}
-              />
+            <div className='w-24 rounded-full text-4xl flex justify-center items-center bg-blue-500  ring ring-white/10 ring-offset-base-100 ring-offset-2'>
+              <Avatar name={fullName} isCard={true} />
             </div>
           </div>
 
@@ -30,6 +32,14 @@ function Card({
           <p className='badge badge-success badge-outline px-4 mb-10'>
             {age} {gender}
           </p>
+          {chat && (
+            <Link to={`/user/connection/${_id}`}>
+              <button className='btn btn-ghost bg-green-600 '>
+                <MessageCircle size={16} />
+                Chat
+              </button>
+            </Link>
+          )}
         </div>
         {!isEdit ? (
           <div className='grid grid-cols-2 border-t border-white/10 rounded-2xl'>

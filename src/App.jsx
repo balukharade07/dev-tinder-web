@@ -11,6 +11,7 @@ import Profile from './components/Profile';
 import ConnectionRequest from './components/ConnectionRequest';
 import Connection from './components/Connection';
 import UserComponents from './components/UserComponents';
+import ChatApp from './components/chatApp/ChatApp';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path='user' element={<UserComponents />}>
               <Route path='feed' element={<Feed />} />
               <Route path='connection' element={<Connection />} />
+              <Route path='connection/:fromUserId' element={<ChatApp />} />
               <Route
                 path='connection-request'
                 element={<ConnectionRequest />}

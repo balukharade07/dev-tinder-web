@@ -5,6 +5,10 @@ class UserServer {
     return userApi.post(`/feed?page=${page}&limit=${limit}`);
   }
 
+  get(id) {
+    return userApi.get(`/user/${id}`);
+  }
+
   update(id, payload) {
     return userApi.patch(`/user/${id}`, payload);
   }
@@ -23,6 +27,10 @@ class UserServer {
 
   getConnection() {
     return userApi.post('/user/connections');
+  }
+
+  getChat(id) {
+    return userApi.get(`/user/chat/${id}`);
   }
 }
 
