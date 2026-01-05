@@ -6,6 +6,7 @@ import authServer from './api/authServer';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from './store/slice/userSlice';
 import Toast from './utils/Toast';
+import { cerateSocketConnetion } from './chatApp/chat';
 
 function Body() {
   const navigate = useNavigate();
@@ -21,7 +22,10 @@ function Body() {
         .getLoggedInUser()
         .then((res) => {
           dispatch(addUser(res));
-          if (res._id && (location.pathname.includes('auth/') || location.pathname === '/')) {
+          if (
+            res._id &&
+            (location.pathname.includes('auth/') || location.pathname === '/')
+          ) {
             dispatch(addUser(res));
             navigate('/user/feed', { replace: true });
           }
@@ -33,6 +37,20 @@ function Body() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!user?._id) return;
+    const socket = cerateSocketConnetion();
+    socket.emit('onlineUser', {
+      firstName: user.firstName,
+      userId: user._id,
+    });
+    
+    return () => {
+      socket.disconnect();
+    };
+
+  }, [user]);
 
   return (
     <>

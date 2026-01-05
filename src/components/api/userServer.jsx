@@ -32,6 +32,10 @@ class UserServer {
   getChat(id) {
     return userApi.get(`/user/chat/${id}`);
   }
+
+  getOnlineUsers() {
+    return userApi.post('/user/onlineUsers');
+  }
 }
 
 const userServer = new UserServer();

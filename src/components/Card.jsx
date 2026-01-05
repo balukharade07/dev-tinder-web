@@ -1,4 +1,8 @@
-import { MessageCircle, MessageCircleHeart, MessageCircleX } from 'lucide-react';
+import {
+  MessageCircle,
+  MessageCircleHeart,
+  MessageCircleX,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Avatar } from './chatApp/Avatar';
 
@@ -12,17 +16,27 @@ function Card({
   isEdit = false,
   screen = '',
   chat = false,
+  isOnline = false,
 }) {
+  console.log('isOnline', isOnline);
   return (
     <div
       className='flex justify-center items-center min-h-screen  shrink-0'
       key={_id}>
       <div className='card w-80  shadow-xl border border-white/10 rounded-2xl  shadow-blue-400'>
         <div className='card-body items-center text-center space-y-3'>
-          <div className='avatar mt-10'>
-            <div className='w-24 rounded-full text-4xl flex justify-center items-center bg-blue-500  ring ring-white/10 ring-offset-base-100 ring-offset-2'>
+          <div className='avatar mt-10 relative'>
+            {isOnline && (
+              <span className='absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping'></span>
+            )}
+
+            <div className='w-24 rounded-full text-4xl flex justify-center items-center bg-blue-500 ring ring-white/10 ring-offset-base-100 ring-offset-2 relative z-10'>
               <Avatar name={fullName} isCard={true} />
             </div>
+
+            {isOnline && (
+              <span className='absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white z-20'></span>
+            )}
           </div>
 
           <h2 className='text-xl font-semibold text-white'>{fullName}</h2>
