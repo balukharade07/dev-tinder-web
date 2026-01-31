@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function ChatInput({ onSend }) {
+export default function ChatInput({ onSend, handleTyping }) {
   const [text, setText] = useState('');
 
   const handleSend = () => {
@@ -16,7 +16,10 @@ export default function ChatInput({ onSend }) {
         className='input input-bordered w-full'
         placeholder='Type a message...'
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          handleTyping(e.target.value);
+        }}
         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
       />
       <button className='btn btn-primary' onClick={handleSend}>

@@ -8,12 +8,14 @@ import ChatHeader from './ChatHeader';
 import ChatBody from './ChatBody';
 import ChatInput from './ChatInput';
 import userServer from '../api/userServer';
+import ChatMessage from './ChatMessage';
 
 export default function ChatApp() {
   const { fromUserId } = useParams();
   const { user } = useSelector((state) => state.user);
   const [targetUser, setTargetUser] = useState({});
   const [messages, setMessages] = useState([]);
+  const [typingUser, setTypingUser] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -60,8 +62,20 @@ export default function ChatApp() {
       ]);
     });
 
+    socket.on('typing', (data) => {
+      if (data.userId !== user._id) {
+        setTypingUser(data.name);
+      }
+    });
+
+    socket.on('stopTyping', () => {
+      setTypingUser(null);
+    });
+
     return () => {
       socket.disconnect();
+      socket.off('typing');
+      socket.off('stopTyping');
     };
   }, [fromUserId, user?._id]);
 
@@ -74,13 +88,46 @@ export default function ChatApp() {
       text: newMessage,
     });
   };
-  
+
+  let typingTimeout;
+
+  const handleTyping = () => {
+    const socket = cerateSocketConnetion();
+
+    socket.emit('typing', {
+      userId: user._id,
+      targetUserId: fromUserId,
+      user: {
+        firstName: user.firstName,
+      },
+    });
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      socket.emit('stopTyping', {
+        userId: user._id,
+        targetUserId: fromUserId,
+      });
+    }, 1000);
+  };
+
   return (
-    <div className='pt-25'>
+    <div className='pt-25 '>
       <ChatLayout>
         <ChatHeader firstName={targetUser?.firstName} />
         <ChatBody messages={messages} />
-        <ChatInput onSend={sendMessage} />
+        {typingUser && (
+          <div className='ml-3 mb-2'>
+            <ChatMessage
+              message={`${typingUser} is typing...`}
+              firstName={typingUser}
+              isOwn={false}
+              colorClass='chat-bubble-primary animate-pulse'
+              avatarBgColor='chat-bubble-primary'
+            />
+          </div>
+        )}
+        <ChatInput onSend={sendMessage} handleTyping={handleTyping} />
       </ChatLayout>
     </div>
   );
